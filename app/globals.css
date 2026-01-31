@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  /* Semantic Color System */
+  --launch: #3B82F6;
+  /* Electric Blue */
+  --profit: #10B981;
+  /* Emerald Green */
+  --defense: #F97316;
+  /* Alert Orange */
+  --rationing: #F59E0B;
+  /* Warning Amber */
+  --liquidation: #EF4444;
+  /* Fire Engine Red */
+  --shadow: #8B5CF6;
+  /* Purple for AI Intent */
+  --profit-emerald: #00FF9F;
+  /* Profit Emerald for verified badges */
+  --abyssal-charcoal: #121212;
+  /* Dark institutional background */
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background: #121212;
+  min-height: 100vh;
+  color: #fff;
+}
+
+.font-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Animations */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px currentColor;
+  }
+
+  50% {
+    box-shadow: 0 0 25px currentColor;
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
