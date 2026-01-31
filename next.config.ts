@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
-  // Allow images from any domain in development
+  // Allow images from any domain
   images: {
     unoptimized: true,
   },
