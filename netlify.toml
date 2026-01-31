@@ -4,17 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NEXT_PUBLIC_API_URL = "https://amazon-api.optimirox.com"
 
 # Next.js on Netlify requires the Next.js Runtime
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Redirects for SPA routing (handled by Next.js, but fallback)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
-
-# Environment variables (set in Netlify dashboard, not here)
-# NEXT_PUBLIC_API_URL = "https://your-engine-url.com"
