@@ -139,8 +139,8 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                             <ShieldCheck className="h-7 w-7 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-emerald-400">STEP 1 OF 2</p>
-                            <h2 className="text-2xl font-bold text-white">Connect Advertising Data</h2>
+                            <p className="text-sm font-medium text-emerald-400">REQUIRED</p>
+                            <h2 className="text-2xl font-bold text-white">Connect Amazon Ads</h2>
                         </div>
                     </div>
 
