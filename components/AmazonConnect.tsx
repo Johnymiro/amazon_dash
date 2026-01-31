@@ -113,12 +113,12 @@ export default function AmazonConnect({ apiUrl = '' }: AmazonConnectProps) {
             };
             const mappedRegion = regionMap[region] || 'eu';
 
-            // Use unified OAuth endpoint - only request Ads grant
-            // Note: SP-API requires separate authorization via Seller Central
+            // Use OAuth endpoint - only request Ads grant
+            // Note: SP-API requires separate authorization (pending Amazon approval)
             const tenantId = user?.tenant_id || 'default';
             const params = new URLSearchParams({
                 tenant_id: tenantId,
-                grants: 'ads,sp',  // Request both Advertising API and SP-API grants
+                grants: 'ads',  // Only request Advertising API grant (SP-API pending approval)
                 region: mappedRegion,
                 success_redirect: `${window.location.origin}/`,
                 error_redirect: `${window.location.origin}/?error=oauth_failed`

@@ -30,17 +30,17 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
 
     const handleConnect = async (type: 'ads' | 'sp') => {
         try {
-            // Use unified OAuth endpoint
+            // Use OAuth endpoint - only Ads API for now (SP-API pending Amazon approval)
             const tenantId = user?.tenant_id || 'default';
             const params = new URLSearchParams({
                 tenant_id: tenantId,
-                grants: 'ads,sp',  // Request both
+                grants: 'ads',  // Only Ads API (SP-API pending approval)
                 region: 'eu', // Default to EU or valid region
                 success_redirect: `${window.location.origin}/`,
                 error_redirect: `${window.location.origin}/?error=oauth_failed`
             });
 
-            // Redirect to unified OAuth flow
+            // Redirect to OAuth flow
             window.location.href = `${API_BASE_URL}/oauth/unified/authorize?${params.toString()}`;
         } catch (err: any) {
             console.error("Connect error", err);
@@ -65,10 +65,10 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
             const data = await res.json();
             setStatus(data);
 
-            // Auto-show SP-API modal if Ads connected but SP not
-            if (data.ads_connected && !data.sp_api_connected) {
-                setShowSpApiModal(true);
-            }
+            // SP-API modal disabled - pending Amazon approval
+            // if (data.ads_connected && !data.sp_api_connected) {
+            //     setShowSpApiModal(true);
+            // }
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -81,10 +81,11 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
     }, []);
 
     // Determine current state
+    // Note: SP-API check disabled - pending Amazon approval
     const getState = (): GatekeeperState => {
         if (loading) return 'loading';
         if (!status || !status.ads_connected) return 'no_ads';
-        if (status.ads_connected && !status.sp_api_connected) return 'partial';
+        // Treat partial (ads only) as full since SP-API is pending approval
         return 'full';
     };
 
