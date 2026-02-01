@@ -33,7 +33,7 @@ export default function AmazonConnect({ apiUrl = '' }: AmazonConnectProps) {
     // Setup form state (only needed once to configure OAuth app)
     const [clientId, setClientId] = useState('');
     const [clientSecret, setClientSecret] = useState('');
-    const [region, setRegion] = useState('north_america');
+    const [region, setRegion] = useState('europe');
 
     useEffect(() => {
         fetchStatus();
@@ -267,8 +267,8 @@ export default function AmazonConnect({ apiUrl = '' }: AmazonConnectProps) {
                             onChange={(e) => setRegion(e.target.value)}
                             className="bg-[#2c2c2e] border border-[#3a3a3c] rounded-xl px-4 py-2 text-white text-sm focus:border-[#ff9900] focus:outline-none"
                         >
-                            <option value="north_america">North America (US, CA, MX)</option>
                             <option value="europe">Europe (UK, DE, FR, ES, IT)</option>
+                            <option value="north_america">North America (US, CA, MX)</option>
                             <option value="far_east">Far East (JP, AU)</option>
                         </select>
                     </div>
