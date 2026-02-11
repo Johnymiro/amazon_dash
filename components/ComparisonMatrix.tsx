@@ -48,7 +48,7 @@ const INITIAL_LOG_ENTRIES: AgentLogEntry[] = [];
 
 const stateColors: Record<string, string> = {
     launch: 'bg-gradient-to-r from-blue-500 to-blue-600',
-    profit: 'bg-gradient-to-r from-emerald-500 to-emerald-600',
+    profit: 'bg-gradient-to-r from-success-500 to-success-600',
     defense: 'bg-gradient-to-r from-orange-500 to-orange-600',
     rationing: 'bg-gradient-to-r from-amber-500 to-amber-600',
     liquidation: 'bg-gradient-to-r from-red-500 to-red-600',
@@ -126,87 +126,87 @@ function LogicPopup({ kw, onClose }: { kw: ExtendedKeywordComparison; onClose: (
     const chainOfThought = parseReasoning(kw.reasoning);
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/40 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
             <div
-                className="bg-[#121212] border border-slate-700 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+                className="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
                 onClick={e => e.stopPropagation()}
                 style={{ boxShadow: '0 0 60px rgba(0, 255, 159, 0.1)' }}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h3 className="text-lg font-bold text-white font-inter flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                             🧠 Multi-Agent Chain of Thought
                         </h3>
-                        <p className="text-sm text-slate-400 mt-1">{kw.keyword}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{kw.keyword}</p>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-white text-2xl">&times;</button>
+                    <button onClick={onClose} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl">&times;</button>
                 </div>
 
                 {/* Chain of Thought from Backend */}
                 {kw.reasoning && (
-                    <div className="mb-4 p-4 bg-gradient-to-r from-purple-900/30 to-[#121212] rounded-xl border border-purple-500/20">
-                        <div className="text-xs text-purple-400 uppercase tracking-wide mb-2">🔗 Logic Trace (Backend)</div>
-                        <p className="text-sm text-slate-300 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                    <div className="mb-4 p-4 bg-gradient-to-r from-brand-50 to-gray-50 dark:from-purple-900/30 dark:to-[#121212] rounded-xl border border-brand-500/15">
+                        <div className="text-xs text-brand-400 uppercase tracking-wide mb-2">🔗 Logic Trace (Backend)</div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             {kw.reasoning}
                         </p>
                     </div>
                 )}
 
                 {/* Strategist */}
-                <div className="mb-4 p-4 bg-[#1a1a1a] rounded-xl border border-slate-700/50">
-                    <div className="flex items-center gap-2 text-xs text-amber-400 uppercase tracking-wide mb-3">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                <div className="mb-4 p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <div className="flex items-center gap-2 text-xs text-warning-400 uppercase tracking-wide mb-3">
+                        <span className="w-2 h-2 bg-warning-500 rounded-full"></span>
                         Strategist — FSM State
                     </div>
                     <div className="flex items-center gap-3">
                         <span className={`px-3 py-1 rounded-full text-sm font-bold text-white ${stateColors[kw.state]}`}>
                             {strategyMap[kw.state]?.icon} {kw.state.toUpperCase()}
                         </span>
-                        <span className="text-slate-400 text-sm">Objective: Maximize TNP</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">Objective: Maximize TNP</span>
                     </div>
                 </div>
 
                 {/* Sentinel Stats */}
-                <div className="mb-4 p-4 bg-[#1a1a1a] rounded-xl border border-slate-700/50">
-                    <div className="flex items-center gap-2 text-xs text-purple-400 uppercase tracking-wide mb-3">
-                        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                <div className="mb-4 p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <div className="flex items-center gap-2 text-xs text-brand-400 uppercase tracking-wide mb-3">
+                        <span className="w-2 h-2 bg-brand-500 rounded-full"></span>
                         Sentinel — Inventory Analysis
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         <div>
-                            <div className="text-xs text-slate-500 mb-1">DoS</div>
-                            <div className="text-xl font-bold text-white">{kw.dos}<span className="text-sm text-slate-400">d</span></div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">DoS</div>
+                            <div className="text-xl font-bold text-gray-900 dark:text-white">{kw.dos}<span className="text-sm text-gray-500 dark:text-gray-400">d</span></div>
                         </div>
                         <div>
-                            <div className="text-xs text-slate-500 mb-1">L<sub>eff</sub></div>
-                            <div className="text-xl font-bold text-white">{kw.lEff}<span className="text-sm text-slate-400">d</span></div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">L<sub>eff</sub></div>
+                            <div className="text-xl font-bold text-gray-900 dark:text-white">{kw.lEff}<span className="text-sm text-gray-500 dark:text-gray-400">d</span></div>
                         </div>
                         <div>
-                            <div className="text-xs text-slate-500 mb-1">M<sub>supply</sub></div>
-                            <div className={`text-xl font-bold ${kw.mSupply > 0.7 ? 'text-[#00FF9F]' : kw.mSupply > 0.3 ? 'text-amber-400' : 'text-red-400'}`}>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">M<sub>supply</sub></div>
+                            <div className={`text-xl font-bold ${kw.mSupply > 0.7 ? 'text-[#00FF9F]' : kw.mSupply > 0.3 ? 'text-warning-400' : 'text-error-400'}`}>
                                 {kw.mSupply.toFixed(2)}
                             </div>
                         </div>
                     </div>
-                    <div className="mt-3 text-xs text-slate-500 bg-slate-800/50 rounded-lg p-2">
+                    <div className="mt-3 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-white/[0.03] rounded-lg p-2">
                         Buffer: {kw.dos - kw.lEff}d → {kw.mSupply > 0.7 ? 'Full throttle' : kw.mSupply > 0.3 ? 'Caution zone' : 'Critical rationing'}
                     </div>
                 </div>
 
                 {/* Tactician Stats */}
-                <div className="mb-4 p-4 bg-[#1a1a1a] rounded-xl border border-slate-700/50">
-                    <div className="flex items-center gap-2 text-xs text-blue-400 uppercase tracking-wide mb-3">
+                <div className="mb-4 p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <div className="flex items-center gap-2 text-xs text-blue-light-400 uppercase tracking-wide mb-3">
                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                         Tactician — Bid Optimization
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-center font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         <div>
-                            <div className="text-xs text-slate-500 mb-1">pCVR</div>
-                            <div className="text-xl font-bold text-purple-400">{kw.pCVR.toFixed(1)}<span className="text-sm">%</span></div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">pCVR</div>
+                            <div className="text-xl font-bold text-brand-400">{kw.pCVR.toFixed(1)}<span className="text-sm">%</span></div>
                         </div>
                         <div>
-                            <div className="text-xs text-slate-500 mb-1">ΔP (Auction Heat)</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">ΔP (Auction Heat)</div>
                             <div className={`text-xl font-bold ${isHot ? 'text-orange-400' : 'text-[#00FF9F]'}`}>
                                 {kw.deltaP.toFixed(2)}
                                 <span className="text-xs ml-1">{isHot ? '🔥 HOT' : '❄️ SOFT'}</span>
@@ -216,17 +216,17 @@ function LogicPopup({ kw, onClose }: { kw: ExtendedKeywordComparison; onClose: (
                 </div>
 
                 {/* AI Decision */}
-                <div className="p-4 bg-gradient-to-r from-emerald-900/30 to-[#121212] rounded-xl border border-emerald-500/20">
-                    <div className="text-xs text-emerald-400 uppercase tracking-wide mb-2">AI Decision</div>
+                <div className="p-4 bg-gradient-to-r from-success-50 to-gray-50 dark:from-emerald-900/30 dark:to-[#121212] rounded-xl border border-success-500/15">
+                    <div className="text-xs text-success-400 uppercase tracking-wide mb-2">AI Decision</div>
                     <div className="flex items-center justify-between font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                        <span className="text-lg text-slate-300">
+                        <span className="text-lg text-gray-700 dark:text-gray-300">
                             ${kw.currentBid.toFixed(2)} → <span className="text-[#00FF9F] font-bold">${kw.optimalBid.toFixed(2)}</span>
                         </span>
-                        <span className={`text-sm font-bold ${kw.optimalBid > kw.currentBid ? 'text-emerald-400' : 'text-amber-400'}`}>
+                        <span className={`text-sm font-bold ${kw.optimalBid > kw.currentBid ? 'text-success-400' : 'text-warning-400'}`}>
                             {kw.optimalBid > kw.currentBid ? '+' : ''}{((kw.optimalBid - kw.currentBid) / kw.currentBid * 100).toFixed(0)}%
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-2">{kw.trace.action}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{kw.trace.action}</p>
                 </div>
             </div>
         </div>
@@ -388,28 +388,28 @@ export default function ComparisonMatrix() {
     const snapshotTime = formatSnapshotTime(alphaReport?.snapshot_timestamp);
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl overflow-hidden">
+        <section className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02] overflow-hidden">
             {/* Header */}
-            <div className="p-6 border-b border-slate-800">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold flex items-center gap-3 font-inter">
+                    <h2 className="text-lg font-bold flex items-center gap-3">
                         <span className="text-2xl">⚔️</span> Strategic Command Matrix
-                        {isLoading && <span className="text-xs text-slate-500 animate-pulse">Syncing...</span>}
+                        {isLoading && <span className="text-xs text-gray-400 dark:text-gray-500 animate-pulse">Syncing...</span>}
                     </h2>
                     <div className="flex items-center gap-4 text-sm">
                         {/* Last Updated Timestamp */}
                         {snapshotTime && (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/50 rounded-lg border border-slate-700">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-gray-50 dark:bg-white/[0.03] rounded-lg border border-gray-300 dark:border-gray-700">
                                 <span className="w-2 h-2 bg-[#00FF9F] rounded-full animate-pulse"></span>
-                                <span className="text-xs text-slate-400">
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
                                     Data Snapshot from <span className="text-[#00FF9F] font-mono">{snapshotTime}</span>
                                 </span>
                             </div>
                         )}
                         {/* Sovereign Badge */}
-                        <div className="flex items-center gap-2 px-3 py-1 bg-purple-900/30 rounded-lg border border-purple-500/30">
-                            <span className="text-purple-400">👑</span>
-                            <span className="text-xs text-purple-400 font-bold">SOVEREIGN</span>
+                        <div className="flex items-center gap-2 px-3 py-1 bg-brand-50 dark:bg-purple-900/30 rounded-lg border border-brand-500/20">
+                            <span className="text-brand-400">👑</span>
+                            <span className="text-xs text-brand-400 font-bold">SOVEREIGN</span>
                         </div>
                     </div>
                 </div>
@@ -417,29 +417,29 @@ export default function ComparisonMatrix() {
                 {/* Hero Metrics - 3 Column */}
                 <div className="grid grid-cols-3 gap-4">
                     {/* Live Baseline */}
-                    <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
-                        <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">Live Baseline TNP</div>
-                        <div className="text-2xl font-bold text-slate-300 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                    <div className="p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl border border-gray-300 dark:border-gray-700">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Live Baseline TNP</div>
+                        <div className="text-2xl font-bold text-gray-700 dark:text-gray-300 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             ${liveTNP.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-xs text-slate-500 mt-1">
+                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                             Sales - Spend - COGS - FBA
                         </div>
                     </div>
 
                     {/* AI Shadow TNP */}
-                    <div className="p-4 bg-purple-900/20 rounded-xl border border-purple-500/30">
-                        <div className="text-xs text-purple-400 uppercase tracking-wide mb-2">AI Shadow TNP</div>
-                        <div className="text-2xl font-bold text-purple-400 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                    <div className="p-4 bg-brand-50 dark:bg-purple-900/20 rounded-xl border border-brand-500/20">
+                        <div className="text-xs text-brand-400 uppercase tracking-wide mb-2">AI Shadow TNP</div>
+                        <div className="text-2xl font-bold text-brand-400 font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             ${shadowTNP.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-xs text-purple-400/60 mt-1">
+                        <div className="text-xs text-brand-400/60 mt-1">
                             M<sub>supply</sub> adjusted projection
                         </div>
                     </div>
 
                     {/* Incremental TNP Lift (Alpha) - HERO */}
-                    <div className="p-4 bg-gradient-to-br from-emerald-900/40 to-emerald-800/20 rounded-xl border border-[#00FF9F]/30 relative overflow-hidden">
+                    <div className="p-4 bg-gradient-to-br from-success-50 to-success-100 dark:from-emerald-900/40 dark:to-emerald-800/20 rounded-xl border border-[#00FF9F]/30 relative overflow-hidden">
                         <div className="absolute top-2 right-2 text-xs px-2 py-0.5 bg-[#00FF9F]/20 text-[#00FF9F] rounded-full font-bold">
                             ALPHA
                         </div>
@@ -458,15 +458,15 @@ export default function ComparisonMatrix() {
             <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                     <thead>
-                        <tr className="text-slate-400 border-b border-slate-800 bg-[#0a0a0a]">
-                            <th className="text-left py-3 px-4 font-inter">Keyword</th>
-                            <th className="text-left py-3 px-4 font-inter">Strategy</th>
-                            <th className="text-right py-3 px-4 font-inter">Live Bid</th>
-                            <th className="text-right py-3 px-4 font-inter">AI Bid</th>
-                            <th className="text-right py-3 px-4 font-inter">Δ Profit</th>
-                            <th className="text-center py-3 px-4 font-inter">Market (24h)</th>
-                            <th className="text-center py-3 px-4 font-inter">Logic</th>
-                            <th className="text-center py-3 px-4 font-inter">Status</th>
+                        <tr className="text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0a0a0a]">
+                            <th className="text-left py-3 px-4">Keyword</th>
+                            <th className="text-left py-3 px-4">Strategy</th>
+                            <th className="text-right py-3 px-4">Live Bid</th>
+                            <th className="text-right py-3 px-4">AI Bid</th>
+                            <th className="text-right py-3 px-4">Δ Profit</th>
+                            <th className="text-center py-3 px-4">Market (24h)</th>
+                            <th className="text-center py-3 px-4">Logic</th>
+                            <th className="text-center py-3 px-4">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -478,25 +478,25 @@ export default function ComparisonMatrix() {
                             return (
                                 <tr
                                     key={kw.id}
-                                    className="border-b border-slate-800/50 transition-all bg-emerald-900/10"
+                                    className="border-b border-gray-200 dark:border-gray-800 transition-all bg-success-500/5"
                                 >
                                     <td className="py-3 px-4">
-                                        <div className="font-medium font-inter">{kw.keyword}</div>
-                                        <div className="text-xs text-slate-500 font-mono">{kw.id}</div>
+                                        <div className="font-medium">{kw.keyword}</div>
+                                        <div className="text-xs text-gray-400 dark:text-gray-500 font-mono">{kw.id}</div>
                                     </td>
                                     <td className="py-3 px-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${stateColors[kw.state]} inline-flex items-center gap-1`}>
                                             <span>{strategy.icon}</span> {strategy.label}
                                         </span>
                                     </td>
-                                    <td className="py-3 px-4 text-right font-mono text-slate-400" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                                    <td className="py-3 px-4 text-right font-mono text-gray-500 dark:text-gray-400" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                                         ${kw.currentBid.toFixed(2)}
                                     </td>
                                     <td className="py-3 px-4 text-right font-mono text-[#00FF9F] font-bold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                                         ${kw.optimalBid.toFixed(2)}
                                     </td>
                                     <td className="py-3 px-4 text-right font-mono font-bold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                                        <span className={profitDelta > 0 ? 'text-[#00FF9F]' : 'text-red-400'}>
+                                        <span className={profitDelta > 0 ? 'text-[#00FF9F]' : 'text-error-400'}>
                                             {profitDelta > 0 ? '+' : ''}${profitDelta.toFixed(0)}
                                         </span>
                                     </td>
@@ -511,17 +511,17 @@ export default function ComparisonMatrix() {
                                     <td className="py-3 px-4 text-center">
                                         <button
                                             onClick={() => setSelectedKeyword(kw)}
-                                            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-purple-500 flex items-center justify-center transition-all group"
+                                            className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:border-brand-500 flex items-center justify-center transition-all group"
                                             title="View Logic Trace"
                                         >
-                                            <svg className="w-4 h-4 text-slate-400 group-hover:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                         </button>
                                     </td>
                                     <td className="py-3 px-4 text-center">
                                         {/* Auto-Executed Badge - Replaces Initialize/Dismiss */}
-                                        <div className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-900/30 rounded-lg border border-emerald-500/30">
+                                        <div className="inline-flex items-center gap-1 px-3 py-1 bg-success-500/5 rounded-lg border border-success-500/20">
                                             <span className="w-2 h-2 bg-[#00FF9F] rounded-full animate-pulse"></span>
                                             <span className="text-xs text-[#00FF9F] font-bold">AUTO-EXECUTED</span>
                                         </div>
@@ -534,17 +534,17 @@ export default function ComparisonMatrix() {
             </div>
 
             {/* Logic Feed Terminal */}
-            <div className="border-t border-slate-800">
+            <div className="border-t border-gray-200 dark:border-gray-800">
                 <button
                     onClick={() => setLogFeedOpen(!logFeedOpen)}
-                    className="w-full flex items-center justify-between px-4 py-3 bg-[#0a0a0a] hover:bg-[#0f0f0f] transition-colors"
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-[#0a0a0a] hover:bg-gray-100 dark:hover:bg-[#0f0f0f] transition-colors"
                 >
-                    <span className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                    <span className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 font-mono">
                         <span className="w-2 h-2 bg-[#00FF9F] rounded-full animate-pulse"></span>
                         LIVE LOGIC FEED
                     </span>
                     <svg
-                        className={`w-4 h-4 text-slate-500 transition-transform ${logFeedOpen ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${logFeedOpen ? 'rotate-180' : ''}`}
                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -552,19 +552,19 @@ export default function ComparisonMatrix() {
                 </button>
 
                 {logFeedOpen && (
-                    <div className="h-32 overflow-y-auto bg-[#0a0a0a] p-4 font-mono text-xs" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                    <div className="h-32 overflow-y-auto bg-gray-50 dark:bg-[#0a0a0a] p-4 font-mono text-xs" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         {logEntries.map((entry, idx) => {
                             const agentColors: Record<string, string> = {
-                                Sentinel: 'text-purple-400',
-                                Tactician: 'text-blue-400',
-                                Strategist: 'text-amber-400',
+                                Sentinel: 'text-brand-400',
+                                Tactician: 'text-blue-light-400',
+                                Strategist: 'text-warning-400',
                                 Semantic: 'text-pink-400',
                             };
                             return (
                                 <div key={idx} className="flex items-start gap-2 py-1 opacity-90 hover:opacity-100">
-                                    <span className="text-slate-600">{entry.timestamp}</span>
+                                    <span className="text-gray-400 dark:text-gray-500">{entry.timestamp}</span>
                                     <span className={`font-bold ${agentColors[entry.agent]}`}>[{entry.agent}]</span>
-                                    <span className="text-slate-400">{entry.message}</span>
+                                    <span className="text-gray-500 dark:text-gray-400">{entry.message}</span>
                                 </div>
                             );
                         })}

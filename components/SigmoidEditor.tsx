@@ -244,10 +244,10 @@ export default function SigmoidEditor() {
     }, [dos, leff, k, simulationMode, simK, simLeff]);
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl p-6">
+        <section className="bg-gray-50 dark:bg-gray-950 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                     <span>📈</span> Supply Chain Throttle (M<sub>supply</sub>)
                 </h3>
 
@@ -258,7 +258,7 @@ export default function SigmoidEditor() {
                         px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2
                         ${simulationMode
                             ? `bg-[${SHADOW_BLUE}]/20 border border-[${SHADOW_BLUE}] text-[${SHADOW_BLUE}]`
-                            : 'bg-slate-800 border border-slate-700 text-slate-400 hover:text-white'
+                            : 'bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                         }
                     `}
                     style={simulationMode ? { backgroundColor: 'rgba(119, 139, 165, 0.2)', borderColor: SHADOW_BLUE, color: SHADOW_BLUE } : undefined}
@@ -294,10 +294,10 @@ export default function SigmoidEditor() {
             <div className={`grid gap-4 mt-4 ${simulationMode ? 'grid-cols-2' : 'grid-cols-2'}`}>
                 {/* Live Controls */}
                 <div className={simulationMode ? 'opacity-60' : ''}>
-                    <div className="text-xs text-slate-500 mb-2 font-inter">LIVE VALUES</div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mb-2">LIVE VALUES</div>
                     <div className="space-y-3">
                         <div>
-                            <label className="text-xs text-slate-400 block mb-1">Days of Supply (DoS)</label>
+                            <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Days of Supply (DoS)</label>
                             <input
                                 type="range"
                                 min="0"
@@ -306,10 +306,10 @@ export default function SigmoidEditor() {
                                 onChange={(e) => setDos(parseInt(e.target.value))}
                                 className="w-full accent-emerald-500"
                             />
-                            <div className="text-right text-emerald-400 font-mono text-sm" style={{ fontFamily: 'JetBrains Mono' }}>{dos} days</div>
+                            <div className="text-right text-success-400 font-mono text-sm" style={{ fontFamily: 'JetBrains Mono' }}>{dos} days</div>
                         </div>
                         <div>
-                            <label className="text-xs text-slate-400 block mb-1">Lead Time (L<sub>eff</sub>)</label>
+                            <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Lead Time (L<sub>eff</sub>)</label>
                             <input
                                 type="range"
                                 min="1"
@@ -318,7 +318,7 @@ export default function SigmoidEditor() {
                                 onChange={(e) => setLeff(parseInt(e.target.value))}
                                 className="w-full accent-purple-500"
                             />
-                            <div className="text-right text-purple-400 font-mono text-sm" style={{ fontFamily: 'JetBrains Mono' }}>{leff} days</div>
+                            <div className="text-right text-brand-400 font-mono text-sm" style={{ fontFamily: 'JetBrains Mono' }}>{leff} days</div>
                         </div>
                     </div>
                 </div>
@@ -326,7 +326,7 @@ export default function SigmoidEditor() {
                 {/* Simulation Controls (only when simulation mode is on) */}
                 {simulationMode && (
                     <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(119, 139, 165, 0.1)' }}>
-                        <div className="text-xs mb-2 font-inter" style={{ color: SHADOW_BLUE }}>SIMULATION PARAMETERS</div>
+                        <div className="text-xs mb-2" style={{ color: SHADOW_BLUE }}>SIMULATION PARAMETERS</div>
                         <div className="space-y-3">
                             <div>
                                 <label className="text-xs block mb-1" style={{ color: SHADOW_BLUE }}>
@@ -365,21 +365,21 @@ export default function SigmoidEditor() {
             </div>
 
             {/* Current Multiplier Display */}
-            <div className="mt-4 p-3 bg-[#1a1a1a] rounded-lg flex items-center justify-between">
+            <div className="mt-4 p-3 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-between">
                 <div>
-                    <div className="text-xs text-slate-400">Current M<sub>supply</sub></div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Current M<sub>supply</sub></div>
                     <div
-                        className={`text-2xl font-bold font-mono ${multiplier > 0.7 ? 'text-emerald-400' : multiplier > 0.3 ? 'text-amber-400' : 'text-red-400'}`}
+                        className={`text-2xl font-bold font-mono ${multiplier > 0.7 ? 'text-success-400' : multiplier > 0.3 ? 'text-warning-400' : 'text-error-400'}`}
                         style={{ fontFamily: 'JetBrains Mono' }}
                     >
                         {multiplier.toFixed(3)}
                     </div>
                 </div>
                 <div className="text-right">
-                    <div className="text-xs text-slate-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
+                    <div className="text-xs text-gray-400 dark:text-gray-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                         M = 1 / (1 + e<sup>-k(DoS - L<sub>eff</sub>)</sup>)
                     </div>
-                    <div className="text-xs text-slate-600 mt-1">
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                         {multiplier > 0.7 ? '✅ Full throttle' : multiplier > 0.3 ? '⚠️ Caution zone' : '🚨 Rationing'}
                     </div>
                 </div>

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
 import { AuthProvider } from "../contexts/AuthContext";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-outfit",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "⚡ Cybernetic Command - Shadow Mode Dashboard",
+  title: "Cybernetic Command - Shadow Mode Dashboard",
   description: "AI Agent Testing Dashboard for Amazon PPC Automation",
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${outfit.className} ${jetbrainsMono.variable} antialiased bg-gray-50 dark:bg-gray-950`}
         suppressHydrationWarning
       >
         <AuthProvider>

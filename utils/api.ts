@@ -4,7 +4,7 @@
 import { api } from './axios';
 import type { ShadowStatus, PerformanceScorecard, AlphaReportResponse, ShadowBidsResponse } from './types';
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 // ═══════════════════════════════════════════════════════════════
 // SHADOW MODE API

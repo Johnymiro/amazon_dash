@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
+import { Zap } from 'lucide-react';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, isLoading } = useAuth();
@@ -16,10 +17,12 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#121212]">
-                <div className="text-center">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div>
-                    <p className="text-slate-400 font-medium">Authenticating...</p>
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+                <div className="text-center animate-fade-in">
+                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-brand-500/10 mb-4">
+                        <Zap className="h-8 w-8 text-brand-400 animate-pulse" />
+                    </div>
+                    <p className="text-gray-400 font-medium text-sm">Authenticating...</p>
                 </div>
             </div>
         );

@@ -62,9 +62,9 @@ const generateAnomalies = (keywords: RealKeyword[]): AnomalyEntry[] => {
 };
 
 const severityColors: Record<string, string> = {
-    high: 'text-red-400',
-    medium: 'text-amber-400',
-    low: 'text-slate-400',
+    high: 'text-error-400',
+    medium: 'text-warning-400',
+    low: 'text-gray-500 dark:text-gray-400',
 };
 
 const typeIcons: Record<string, string> = {
@@ -91,17 +91,17 @@ export default function AnomalyLog() {
     if (anomalies.length === 0) return null; // Or logic for empty state
 
     return (
-        <section className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-2xl p-6">
+        <section className="bg-gray-100/50 dark:bg-gray-900/50 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                 <span>⚠️</span> Friction & Anomaly Log
             </h3>
             <div className="space-y-2 max-h-64 overflow-y-auto">
                 {anomalies.map((a, idx) => (
-                    <div key={idx} className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg">
+                    <div key={idx} className="flex items-start gap-3 p-3 bg-white dark:bg-white/[0.02] rounded-lg">
                         <span>{typeIcons[a.type]}</span>
                         <div className="flex-1 min-w-0">
                             <div className={`text-sm ${severityColors[a.severity]}`}>{a.message}</div>
-                            <div className="text-xs text-slate-600 font-mono">{a.time}</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 font-mono">{a.time}</div>
                         </div>
                     </div>
                 ))}

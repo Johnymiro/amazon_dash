@@ -10,21 +10,21 @@ import type { PerformanceScorecard } from '@/utils/types';
 
 function LoadingSkeleton() {
     return (
-        <section className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-2xl p-6 animate-pulse">
+        <section className="bg-gray-100/50 dark:bg-gray-900/50 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6 animate-pulse">
             <div className="flex items-center justify-between mb-4">
-                <div className="h-6 w-40 bg-slate-700 rounded"></div>
-                <div className="h-6 w-16 bg-slate-700 rounded"></div>
+                <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
             <div className="space-y-4">
-                <div className="text-center p-4 bg-slate-800/50 rounded-xl">
-                    <div className="h-4 w-24 bg-slate-700 rounded mx-auto mb-2"></div>
-                    <div className="h-12 w-20 bg-slate-700 rounded mx-auto"></div>
+                <div className="text-center p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+                    <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mx-auto mb-2"></div>
+                    <div className="h-12 w-20 bg-gray-200 dark:bg-gray-700 rounded mx-auto"></div>
                 </div>
                 <div className="space-y-3">
-                    <div className="h-4 bg-slate-700 rounded"></div>
-                    <div className="h-4 bg-slate-700 rounded"></div>
-                    <div className="h-4 bg-slate-700 rounded"></div>
-                    <div className="h-4 bg-slate-700 rounded"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
             </div>
         </section>
@@ -82,10 +82,10 @@ export default function AIScorecard() {
     const scorecard = calculateScore();
 
     const scoreColor = (score: number) => {
-        if (score >= 90) return 'text-emerald-400';
-        if (score >= 75) return 'text-yellow-400';
+        if (score >= 90) return 'text-success-400';
+        if (score >= 75) return 'text-warning-400';
         if (score >= 50) return 'text-orange-400';
-        return 'text-red-400';
+        return 'text-error-400';
     };
 
     // Show skeleton while loading
@@ -94,34 +94,34 @@ export default function AIScorecard() {
     // Handle error state
     if (error) {
         return (
-            <section className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-2xl p-6">
+            <section className="bg-gray-100/50 dark:bg-gray-900/50 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                    <h3 className="text-lg font-bold flex items-center gap-2">
                         <span>🧠</span> AI Decision Confidence
                     </h3>
                     <button
                         onClick={() => refetch()}
-                        className="text-xs px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                        className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
                     >
                         ↻ Retry
                     </button>
                 </div>
-                <div className="text-center p-4 bg-slate-800/50 rounded-xl">
-                    <div className="text-slate-400">Unable to load scorecard</div>
+                <div className="text-center p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+                    <div className="text-gray-500 dark:text-gray-400">Unable to load scorecard</div>
                 </div>
             </section>
         );
     }
 
     return (
-        <section className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-2xl p-6">
+        <section className="bg-gray-100/50 dark:bg-gray-900/50 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                     <span>🧠</span> AI Decision Confidence
                 </h3>
                 <button
                     onClick={() => refetch()}
-                    className="text-xs px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                    className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
                 >
                     ↻ Refresh
                 </button>
@@ -129,38 +129,38 @@ export default function AIScorecard() {
 
             <div className="space-y-4">
                 {/* Overall Grade */}
-                <div className="text-center p-4 bg-slate-800/50 rounded-xl">
-                    <div className="text-xs text-slate-400 mb-1">Overall Confidence</div>
+                <div className="text-center p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Overall Confidence</div>
                     <div className={`text-5xl font-bold font-mono ${scoreColor(scorecard.overall.score)}`} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         {scorecard.overall.score}%
                     </div>
                     {scorecard.overall.ready_for_live && (
-                        <div className="mt-2 text-xs text-emerald-400 font-bold">✅ Ready for LIVE mode</div>
+                        <div className="mt-2 text-xs text-success-400 font-bold">✅ Ready for LIVE mode</div>
                     )}
                 </div>
 
                 {/* Component Scores */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-sm">Keyword Actions (Binomial CDF)</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">Keyword Actions (Binomial CDF)</span>
                         <span className={`font-mono ${scoreColor(scorecard.agents.tactician.score)}`} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             {scorecard.agents.tactician.score}%
                         </span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-sm">Semantic Harvesting (Cosine)</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">Semantic Harvesting (Cosine)</span>
                         <span className={`font-mono ${scoreColor(scorecard.agents.semantic.score)}`} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             {scorecard.agents.semantic.score}%
                         </span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-sm">Bid Optimization (pCVR)</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">Bid Optimization (pCVR)</span>
                         <span className={`font-mono ${scoreColor(scorecard.agents.strategist.score)}`} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             {scorecard.agents.strategist.score}%
                         </span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-sm">State Machine Stability</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">State Machine Stability</span>
                         <span className={`font-mono ${scoreColor(scorecard.agents.sentinel.score)}`} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             {scorecard.agents.sentinel.score}%
                         </span>

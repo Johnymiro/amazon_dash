@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authApi } from '../utils/authApi';
 import type { User, AuthState } from '../types/auth';
+import { authApi } from '../utils/authApi';
 
 interface AuthContextType extends AuthState {
     login: (email: string, password: string) => Promise<void>;
@@ -17,12 +17,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check authentication status on mount
     const checkAuth = async () => {
         try {
             const userData = await authApi.me();
             setUser(userData);
-        } catch (error) {
+        } catch {
             setUser(null);
         } finally {
             setIsLoading(false);

@@ -30,17 +30,15 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
 
     const handleConnect = async (type: 'ads' | 'sp') => {
         try {
-            // Use OAuth endpoint - only Ads API for now (SP-API pending Amazon approval)
             const tenantId = user?.tenant_id || 'default';
             const params = new URLSearchParams({
                 tenant_id: tenantId,
-                grants: 'ads',  // Only Ads API (SP-API pending approval)
-                region: 'eu', // Default to EU or valid region
+                grants: 'ads',
+                region: 'eu',
                 success_redirect: `${window.location.origin}/`,
                 error_redirect: `${window.location.origin}/?error=oauth_failed`
             });
 
-            // Redirect to OAuth flow
             window.location.href = `${API_BASE_URL}/oauth/unified/authorize?${params.toString()}`;
         } catch (err: any) {
             console.error("Connect error", err);
@@ -55,7 +53,6 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
             });
 
             if (!res.ok) {
-                // If 401, user not authenticated - let ProtectedRoute handle redirect
                 if (res.status === 401) {
                     setLoading(false);
                     return;
@@ -64,13 +61,9 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
             }
             const data = await res.json();
             setStatus(data);
-
-            // SP-API modal disabled - pending Amazon approval
-            // if (data.ads_connected && !data.sp_api_connected) {
-            //     setShowSpApiModal(true);
-            // }
         } catch (err: any) {
-            setError(err.message);
+            // If backend is unreachable, skip gatekeeper and show dashboard
+            setStatus(null);
         } finally {
             setLoading(false);
         }
@@ -80,12 +73,9 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
         fetchStatus();
     }, []);
 
-    // Determine current state
-    // Note: SP-API check disabled - pending Amazon approval
     const getState = (): GatekeeperState => {
         if (loading) return 'loading';
         if (!status || !status.ads_connected) return 'no_ads';
-        // Treat partial (ads only) as full since SP-API is pending approval
         return 'full';
     };
 
@@ -94,78 +84,59 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
     // ==================== LOADING STATE ====================
     if (currentState === 'loading') {
         return (
-            <div className="flex h-screen w-full items-center justify-center bg-[#0a0f1c]">
-                <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-12 w-12 animate-spin text-emerald-400" />
-                    <span className="font-mono text-emerald-400">INITIALIZING GATEKEEPER...</span>
+            <div className="flex h-screen w-full items-center justify-center bg-gray-50 dark:bg-gray-950">
+                <div className="flex flex-col items-center gap-4 animate-fade-in">
+                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-success-500/10">
+                        <Loader2 className="h-8 w-8 animate-spin text-success-400" />
+                    </div>
+                    <span className="font-medium text-success-400 text-sm">INITIALIZING GATEKEEPER...</span>
                 </div>
             </div>
         );
     }
 
-    // If error, show error state (don't fail open)
-    if (error) {
-        return (
-            <div className="flex h-screen w-full items-center justify-center bg-[#0a0f1c]">
-                <div className="text-center">
-                    <AlertTriangle className="mx-auto h-12 w-12 text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-white mb-2">Connection Error</h2>
-                    <p className="text-gray-400 max-w-md mx-auto mb-6">{error}</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="rounded-lg bg-emerald-600 px-6 py-2 font-semibold text-white hover:bg-emerald-500"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    // If no status loaded (should be handled by error above, but safety check)
     if (!status) {
         return <>{children}</>;
     }
 
     // ==================== STATE 1: NO ADS CONNECTED ====================
-    // BLOCKING - The Tactician Agent cannot function without Ads API
     if (currentState === 'no_ads') {
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm">
-                <div className="w-full max-w-lg rounded-xl border border-emerald-500/30 bg-gradient-to-b from-[#0F172A] to-[#0a1020] p-8 shadow-2xl">
+            <div className="fixed inset-0 z-99999 flex items-center justify-center bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm">
+                <div className="w-full max-w-lg rounded-2xl border border-success-500/20 bg-gray-50 dark:bg-gray-950 p-8 shadow-theme-xl animate-fade-in">
                     {/* Header */}
                     <div className="mb-6 flex items-center gap-4">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 ring-2 ring-emerald-500/30">
-                            <ShieldCheck className="h-7 w-7 text-emerald-400" />
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-success-500/10 ring-1 ring-success-500/20">
+                            <ShieldCheck className="h-7 w-7 text-success-400" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-emerald-400">REQUIRED</p>
-                            <h2 className="text-2xl font-bold text-white">Connect Amazon Ads</h2>
+                            <p className="text-theme-xs font-semibold text-success-400 uppercase tracking-wider">REQUIRED</p>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Connect Amazon Ads</h2>
                         </div>
                     </div>
 
                     {/* Agent Info */}
-                    <div className="mb-6 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
-                        <h3 className="mb-2 font-semibold text-emerald-300">Required for: The Tactician Agent</h3>
-                        <p className="text-sm leading-relaxed text-gray-300">
+                    <div className="mb-6 rounded-xl border border-success-500/15 bg-success-500/5 p-4">
+                        <h3 className="mb-2 font-semibold text-success-400 text-sm">Required for: The Tactician Agent</h3>
+                        <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
                             The Tactician needs access to your Amazon Advertising data to calculate the
-                            <span className="mx-1 font-mono text-emerald-400">Intraday Performance Delta (ΔP)</span>
+                            <span className="mx-1 font-mono text-success-400">Intraday Performance Delta</span>
                             and optimize your bids in real-time.
                         </p>
                     </div>
 
                     {/* Benefits */}
-                    <div className="mb-6 space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <Zap className="h-4 w-4 text-emerald-400" />
+                    <div className="mb-6 space-y-2.5">
+                        <div className="flex items-center gap-2.5 text-sm text-gray-500 dark:text-gray-400">
+                            <Zap className="h-4 w-4 text-success-400 flex-shrink-0" />
                             <span>Real-time bid optimization</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <TrendingUp className="h-4 w-4 text-emerald-400" />
+                        <div className="flex items-center gap-2.5 text-sm text-gray-500 dark:text-gray-400">
+                            <TrendingUp className="h-4 w-4 text-success-400 flex-shrink-0" />
                             <span>Marketing Stream data ingestion</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <Shield className="h-4 w-4 text-emerald-400" />
+                        <div className="flex items-center gap-2.5 text-sm text-gray-500 dark:text-gray-400">
+                            <Shield className="h-4 w-4 text-success-400 flex-shrink-0" />
                             <span>Campaign performance tracking</span>
                         </div>
                     </div>
@@ -173,7 +144,7 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                     {/* CTA */}
                     <button
                         onClick={() => handleConnect('ads')}
-                        className="group flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 py-4 font-semibold text-white shadow-lg shadow-emerald-500/20 transition-all hover:from-emerald-500 hover:to-emerald-400"
+                        className="group flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 px-6 py-4 font-semibold text-white shadow-theme-sm transition-all hover:bg-success-400 text-sm"
                     >
                         Connect Amazon Ads
                         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -183,22 +154,20 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
         );
     }
 
-    // ==================== STATE 2: PARTIAL - ADS CONNECTED, NO SP-API ====================
-    // NON-BLOCKING - Allow dashboard access with warning banner
+    // ==================== STATE 2: PARTIAL ====================
     if (currentState === 'partial') {
         return (
             <>
-                {/* Warning Banner - Fixed at top */}
                 {!dismissedWarning && (
-                    <div className="fixed left-0 right-0 top-0 z-40 border-b border-amber-500/30 bg-gradient-to-r from-amber-900/90 to-orange-900/90 px-4 py-3 backdrop-blur-sm">
+                    <div className="fixed left-0 right-0 top-0 z-9999 border-b border-warning-500/20 bg-warning-500/5 backdrop-blur-sm px-4 py-3">
                         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-400" />
+                                <AlertTriangle className="h-4 w-4 flex-shrink-0 text-warning-400" />
                                 <div>
-                                    <p className="font-medium text-amber-100">
+                                    <p className="font-semibold text-warning-400 text-sm">
                                         Inventory Protection Disabled
                                     </p>
-                                    <p className="text-sm text-amber-200/80">
+                                    <p className="text-theme-xs text-warning-300/70">
                                         Connect SP-API to enable the Supply Sentinel and prevent Stockout Death Spiral.
                                     </p>
                                 </div>
@@ -206,13 +175,13 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setShowSpApiModal(true)}
-                                    className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-amber-400"
+                                    className="rounded-lg bg-warning-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-warning-400 shadow-theme-xs"
                                 >
                                     Connect Now
                                 </button>
                                 <button
                                     onClick={() => setDismissedWarning(true)}
-                                    className="rounded-lg p-2 text-amber-300 transition-colors hover:bg-amber-500/20"
+                                    className="rounded-lg p-2 text-warning-400 transition-colors hover:bg-warning-500/10"
                                     title="Dismiss"
                                 >
                                     <X className="h-4 w-4" />
@@ -224,45 +193,45 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
 
                 {/* SP-API Connection Modal */}
                 {showSpApiModal && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-                        <div className="w-full max-w-lg rounded-xl border border-amber-500/30 bg-gradient-to-b from-[#0F172A] to-[#0a1020] p-8 shadow-2xl">
+                    <div className="fixed inset-0 z-999999 flex items-center justify-center bg-black/40 dark:bg-black/80 backdrop-blur-sm">
+                        <div className="w-full max-w-lg rounded-2xl border border-warning-500/20 bg-gray-50 dark:bg-gray-950 p-8 shadow-theme-xl animate-fade-in">
                             {/* Header */}
                             <div className="mb-6 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 ring-2 ring-amber-500/30">
-                                        <Server className="h-7 w-7 text-amber-400" />
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-500/10 ring-1 ring-warning-500/20">
+                                        <Server className="h-7 w-7 text-warning-400" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-amber-400">STEP 2 OF 2</p>
-                                        <h2 className="text-2xl font-bold text-white">Connect Inventory Data</h2>
+                                        <p className="text-theme-xs font-semibold text-warning-400 uppercase tracking-wider">STEP 2 OF 2</p>
+                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Connect Inventory Data</h2>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setShowSpApiModal(false)}
-                                    className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                                    className="rounded-lg p-2 text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
                             </div>
 
                             {/* Agent Info */}
-                            <div className="mb-6 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
-                                <h3 className="mb-2 font-semibold text-amber-300">Required for: The Supply Sentinel</h3>
-                                <p className="text-sm leading-relaxed text-gray-300">
+                            <div className="mb-6 rounded-xl border border-warning-500/15 bg-warning-500/5 p-4">
+                                <h3 className="mb-2 font-semibold text-warning-400 text-sm">Required for: The Supply Sentinel</h3>
+                                <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
                                     The Supply Sentinel needs access to your Seller Central inventory to calculate
-                                    <span className="mx-1 font-mono text-amber-400">Days of Supply (DoS)</span>
+                                    <span className="mx-1 font-mono text-warning-400">Days of Supply (DoS)</span>
                                     and
-                                    <span className="mx-1 font-mono text-amber-400">Effective Lead Time (L<sub>eff</sub>)</span>.
+                                    <span className="mx-1 font-mono text-warning-400">Effective Lead Time (L<sub>eff</sub>)</span>.
                                 </p>
                             </div>
 
                             {/* Warning */}
-                            <div className="mb-6 rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+                            <div className="mb-6 rounded-xl border border-error-500/15 bg-error-500/5 p-4">
                                 <div className="flex items-start gap-3">
-                                    <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+                                    <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-error-400" />
                                     <div>
-                                        <p className="font-medium text-red-300">Without SP-API:</p>
-                                        <p className="text-sm text-gray-400">
+                                        <p className="font-medium text-error-400 text-sm">Without SP-API:</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
                                             The braking multiplier (M<sub>supply</sub>) cannot be calculated.
                                             The system will operate without inventory protection, risking stockouts.
                                         </p>
@@ -271,13 +240,13 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                             </div>
 
                             {/* Benefits */}
-                            <div className="mb-6 space-y-2">
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
-                                    <Shield className="h-4 w-4 text-amber-400" />
+                            <div className="mb-6 space-y-2.5">
+                                <div className="flex items-center gap-2.5 text-sm text-gray-500 dark:text-gray-400">
+                                    <Shield className="h-4 w-4 text-warning-400 flex-shrink-0" />
                                     <span>Stockout Death Spiral prevention</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
-                                    <TrendingUp className="h-4 w-4 text-amber-400" />
+                                <div className="flex items-center gap-2.5 text-sm text-gray-500 dark:text-gray-400">
+                                    <TrendingUp className="h-4 w-4 text-warning-400 flex-shrink-0" />
                                     <span>Inventory-aware bid dampening</span>
                                 </div>
                             </div>
@@ -286,14 +255,14 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                             <div className="space-y-3">
                                 <button
                                     onClick={() => handleConnect('sp')}
-                                    className="group flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 px-6 py-4 font-semibold text-white shadow-lg shadow-amber-500/20 transition-all hover:from-amber-500 hover:to-amber-400"
+                                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-warning-500 px-6 py-4 font-semibold text-white shadow-theme-sm transition-all hover:bg-warning-400 text-sm"
                                 >
                                     Authorize Seller Central
                                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                                 </button>
                                 <button
                                     onClick={() => setShowSpApiModal(false)}
-                                    className="w-full rounded-lg border border-gray-600 px-6 py-3 text-sm text-gray-400 transition-colors hover:border-gray-500 hover:text-gray-300"
+                                    className="w-full rounded-xl border border-gray-300 dark:border-gray-700 px-6 py-3 text-sm text-gray-500 dark:text-gray-400 transition-colors hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
                                 >
                                     Skip for now (not recommended)
                                 </button>
@@ -302,7 +271,6 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
                     </div>
                 )}
 
-                {/* Dashboard with padding for warning banner */}
                 <div className={!dismissedWarning ? 'pt-[72px]' : ''}>
                     {children}
                 </div>
@@ -310,6 +278,6 @@ export default function DashboardGatekeeper({ children }: DashboardGatekeeperPro
         );
     }
 
-    // ==================== STATE 3: FULL - ALL CONNECTED ====================
+    // ==================== STATE 3: FULL ====================
     return <>{children}</>;
 }

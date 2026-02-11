@@ -93,9 +93,9 @@ const mockBrands: BrandProfile[] = [
 
 const healthColors = {
     excellent: { bg: 'bg-[#00FF9F]/20', border: 'border-[#00FF9F]/50', text: 'text-[#00FF9F]', dot: 'bg-[#00FF9F]' },
-    good: { bg: 'bg-emerald-500/20', border: 'border-emerald-500/50', text: 'text-emerald-400', dot: 'bg-emerald-500' },
-    warning: { bg: 'bg-amber-500/20', border: 'border-amber-500/50', text: 'text-amber-400', dot: 'bg-amber-500' },
-    critical: { bg: 'bg-red-500/20', border: 'border-red-500/50', text: 'text-red-400', dot: 'bg-red-500' }
+    good: { bg: 'bg-success-500/10', border: 'border-emerald-500/50', text: 'text-success-400', dot: 'bg-success-500' },
+    warning: { bg: 'bg-warning-500/10', border: 'border-amber-500/50', text: 'text-warning-400', dot: 'bg-warning-500' },
+    critical: { bg: 'bg-error-500/10', border: 'border-red-500/50', text: 'text-error-400', dot: 'bg-error-500' }
 };
 
 const marketplaceFlags: Record<string, string> = {
@@ -131,13 +131,13 @@ function BrandCard({ brand }: { brand: BrandProfile }) {
                 <div className="flex items-center gap-2">
                     <span className="text-xl">{flag}</span>
                     <div>
-                        <div className="font-bold text-white text-sm">{brand.name}</div>
-                        <div className="text-[10px] text-slate-500">{brand.marketplace}</div>
+                        <div className="font-bold text-gray-900 dark:text-white text-sm">{brand.name}</div>
+                        <div className="text-[10px] text-gray-400 dark:text-gray-500">{brand.marketplace}</div>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     {brand.shadowMode && (
-                        <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-[10px]">SHADOW</span>
+                        <span className="px-2 py-0.5 bg-brand-500/10 text-brand-400 rounded text-[10px]">SHADOW</span>
                     )}
                     <div className={`w-2 h-2 rounded-full ${colors.dot} ${brand.status === 'syncing' ? 'animate-pulse' : ''}`}></div>
                 </div>
@@ -147,26 +147,26 @@ function BrandCard({ brand }: { brand: BrandProfile }) {
             {brand.status === 'connected' && brand.shadowMode ? (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-400">Profit Alpha</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Profit Alpha</span>
                         <span className="text-lg font-bold text-[#00FF9F] font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                             +${brand.metrics.alpha.toLocaleString()}
                         </span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-400">Alpha %</span>
-                        <span className="text-sm font-mono text-purple-400" style={{ fontFamily: 'JetBrains Mono' }}>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Alpha %</span>
+                        <span className="text-sm font-mono text-brand-400" style={{ fontFamily: 'JetBrains Mono' }}>
                             ↑ {brand.metrics.alphaPercent.toFixed(1)}%
                         </span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-400">Shadow Days</span>
-                        <span className={`text-sm font-mono ${brand.metrics.shadowDays >= 14 ? 'text-[#00FF9F]' : 'text-amber-400'}`} style={{ fontFamily: 'JetBrains Mono' }}>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Shadow Days</span>
+                        <span className={`text-sm font-mono ${brand.metrics.shadowDays >= 14 ? 'text-[#00FF9F]' : 'text-warning-400'}`} style={{ fontFamily: 'JetBrains Mono' }}>
                             {brand.metrics.shadowDays}/14d
                         </span>
                     </div>
                 </div>
             ) : (
-                <div className="py-4 text-center text-sm text-slate-500">
+                <div className="py-4 text-center text-sm text-gray-400 dark:text-gray-500">
                     {brand.status === 'disconnected' ? '⚠️ Reconnection Required' :
                         brand.status === 'syncing' ? '🔄 Initial Sync...' :
                             '⏸️ Shadow Mode Inactive'}
@@ -174,8 +174,8 @@ function BrandCard({ brand }: { brand: BrandProfile }) {
             )}
 
             {/* Footer */}
-            <div className="mt-3 pt-2 border-t border-slate-700/30 flex items-center justify-between">
-                <span className="text-[10px] text-slate-500">Last sync: {timeSinceSync()}</span>
+            <div className="mt-3 pt-2 border-t border-gray-300/30 dark:border-gray-700/30 flex items-center justify-between">
+                <span className="text-[10px] text-gray-400 dark:text-gray-500">Last sync: {timeSinceSync()}</span>
                 <span className={`text-[10px] font-bold uppercase ${colors.text}`}>{brand.metrics.health}</span>
             </div>
         </div>
@@ -202,55 +202,55 @@ export default function EnterpriseOverview() {
     const healthyCount = brands.filter(b => b.metrics.health === 'excellent' || b.metrics.health === 'good').length;
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl overflow-hidden">
+        <section className="bg-gray-50 dark:bg-gray-950 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
             {/* Header */}
-            <div className="p-6 border-b border-slate-800">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="text-2xl">🏢</span>
                         <div>
-                            <h2 className="text-lg font-bold font-inter">Enterprise Command Cockpit</h2>
-                            <p className="text-xs text-slate-500">Multi-Brand Portfolio Overview</p>
+                            <h2 className="text-lg font-bold">Enterprise Command Cockpit</h2>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">Multi-Brand Portfolio Overview</p>
                         </div>
                     </div>
                     <button
                         onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 1000); }}
                         disabled={loading}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 rounded-lg text-sm transition-colors flex items-center gap-2"
+                        className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 text-gray-700 dark:text-gray-300 rounded-lg text-sm transition-colors flex items-center gap-2"
                     >
                         {loading ? (
-                            <div className="animate-spin w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full"></div>
+                            <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
                         ) : '↻'} Refresh All
                     </button>
                 </div>
             </div>
 
             {/* Aggregate Summary */}
-            <div className="p-6 bg-gradient-to-r from-[#00FF9F]/10 via-purple-900/20 to-[#121212] border-b border-slate-800">
+            <div className="p-6 bg-gradient-to-r from-[#00FF9F]/10 via-purple-900/20 to-gray-100 dark:to-[#121212] border-b border-gray-200 dark:border-gray-800">
                 <div className="grid grid-cols-5 gap-6">
                     <div className="text-center">
                         <div className="text-3xl font-bold text-[#00FF9F] font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                             +${totalAlpha.toLocaleString()}
                         </div>
-                        <div className="text-xs text-slate-400 mt-1">Total Alpha</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Alpha</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-purple-400 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
+                        <div className="text-3xl font-bold text-brand-400 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                             ↑{avgAlphaPercent.toFixed(1)}%
                         </div>
-                        <div className="text-xs text-slate-400 mt-1">Avg Alpha %</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Avg Alpha %</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-white">{brands.length}</div>
-                        <div className="text-xs text-slate-400 mt-1">Total Brands</div>
+                        <div className="text-3xl font-bold text-gray-900 dark:text-white">{brands.length}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Brands</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-emerald-400">{connectedCount}/{brands.length}</div>
-                        <div className="text-xs text-slate-400 mt-1">Connected</div>
+                        <div className="text-3xl font-bold text-success-400">{connectedCount}/{brands.length}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Connected</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-amber-400">{healthyCount}/{brands.length}</div>
-                        <div className="text-xs text-slate-400 mt-1">Healthy</div>
+                        <div className="text-3xl font-bold text-warning-400">{healthyCount}/{brands.length}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Healthy</div>
                     </div>
                 </div>
             </div>
@@ -265,7 +265,7 @@ export default function EnterpriseOverview() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-slate-800 text-center text-xs text-slate-500">
+            <div className="p-4 border-t border-gray-200 dark:border-gray-800 text-center text-xs text-gray-400 dark:text-gray-500">
                 Portfolio managed by Cybernetic Command • Next sync in 5 minutes
             </div>
         </section>

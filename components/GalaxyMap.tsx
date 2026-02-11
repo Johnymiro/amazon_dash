@@ -128,31 +128,31 @@ export default function GalaxyMap() {
         .reduce((sum, c) => sum + c.keywords, 0);
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl p-6">
+        <section className="bg-gray-50 dark:bg-gray-950 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                    <h3 className="text-lg font-bold flex items-center gap-2">
                         <span>🌌</span> Semantic Galaxy
                     </h3>
-                    <span className="text-xs text-slate-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
+                    <span className="text-xs text-gray-400 dark:text-gray-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                         /agents/semantic/classify
                     </span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded text-xs">
-                        <span className="text-slate-400">High Intent:</span>
-                        <span className="text-emerald-400 ml-1 font-bold">{highIntentKeywords}</span>
+                    <div className="px-2 py-1 bg-success-500/10 border border-success-500/20 rounded text-xs">
+                        <span className="text-gray-500 dark:text-gray-400">High Intent:</span>
+                        <span className="text-success-400 ml-1 font-bold">{highIntentKeywords}</span>
                     </div>
-                    <div className="px-2 py-1 bg-red-500/10 border border-red-500/30 rounded text-xs">
-                        <span className="text-slate-400">Waste Avoided:</span>
-                        <span className="text-red-400 ml-1 font-bold">${totalWasteAvoided.toLocaleString()}</span>
+                    <div className="px-2 py-1 bg-error-500/5 border border-error-500/20 rounded text-xs">
+                        <span className="text-gray-500 dark:text-gray-400">Waste Avoided:</span>
+                        <span className="text-error-400 ml-1 font-bold">${totalWasteAvoided.toLocaleString()}</span>
                     </div>
                 </div>
             </div>
 
             {/* Galaxy Visualization */}
-            <div className="relative bg-[#0a0a0a] rounded-xl overflow-hidden" style={{ height: '380px' }}>
+            <div className="relative bg-gray-50 dark:bg-[#0a0a0a] rounded-xl overflow-hidden" style={{ height: '380px' }}>
                 {/* Radial gradient background */}
                 <div
                     className="absolute inset-0"
@@ -182,7 +182,7 @@ export default function GalaxyMap() {
                 {/* Hover Tooltip */}
                 {hoveredCluster && (
                     <div
-                        className="absolute p-4 bg-[#1a1a1a] border rounded-xl shadow-2xl z-50 w-64"
+                        className="absolute p-4 bg-white dark:bg-gray-900 border rounded-xl shadow-2xl z-50 w-64"
                         style={{
                             left: Math.min(hoveredCluster.x + 60, 280),
                             top: Math.min(hoveredCluster.y - 40, 280),
@@ -209,30 +209,30 @@ export default function GalaxyMap() {
 
                         <div className="space-y-1 text-xs">
                             <div className="flex justify-between">
-                                <span className="text-slate-400">Keywords:</span>
+                                <span className="text-gray-500 dark:text-gray-400">Keywords:</span>
                                 <span className="font-mono" style={{ fontFamily: 'JetBrains Mono' }}>{hoveredCluster.keywords}</span>
                             </div>
 
                             {hoveredCluster.classification !== 'negated' ? (
                                 <>
                                     <div className="flex justify-between">
-                                        <span className="text-slate-400">Spend:</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Spend:</span>
                                         <span className="font-mono" style={{ fontFamily: 'JetBrains Mono' }}>${hoveredCluster.spend.toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-slate-400">Conversions:</span>
-                                        <span className="font-mono text-emerald-400" style={{ fontFamily: 'JetBrains Mono' }}>{hoveredCluster.conversions}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Conversions:</span>
+                                        <span className="font-mono text-success-400" style={{ fontFamily: 'JetBrains Mono' }}>{hoveredCluster.conversions}</span>
                                     </div>
                                 </>
                             ) : (
-                                <div className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded">
-                                    <div className="text-red-400 font-bold flex items-center gap-1">
+                                <div className="mt-2 p-2 bg-error-500/5 border border-error-500/20 rounded">
+                                    <div className="text-error-400 font-bold flex items-center gap-1">
                                         💰 Waste Avoided
                                     </div>
-                                    <div className="text-lg font-bold text-red-400 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
+                                    <div className="text-lg font-bold text-error-400 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                                         ${hoveredCluster.wasteAvoided?.toLocaleString()}
                                     </div>
-                                    <div className="text-[10px] text-red-400/70 mt-1">
+                                    <div className="text-[10px] text-error-400/70 mt-1">
                                         via Binomial Negation (P &gt; 0.95)
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@ export default function GalaxyMap() {
 
                 {/* Center label */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                    <div className="text-xs text-purple-400/50 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>INTENT SPACE</div>
+                    <div className="text-xs text-brand-400/50 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>INTENT SPACE</div>
                 </div>
             </div>
 
@@ -256,11 +256,11 @@ export default function GalaxyMap() {
                                 className="w-3 h-3 rounded-full"
                                 style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}` }}
                             />
-                            <span className="text-slate-400">{key.replace('_', ' ')}</span>
+                            <span className="text-gray-500 dark:text-gray-400">{key.replace('_', ' ')}</span>
                         </div>
                     ))}
                 </div>
-                <div className="text-xs text-slate-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
+                <div className="text-xs text-gray-400 dark:text-gray-500 font-mono" style={{ fontFamily: 'JetBrains Mono' }}>
                     Circle size = keyword count
                 </div>
             </div>

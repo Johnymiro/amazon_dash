@@ -149,13 +149,13 @@ export default function GhostDataChart() {
     }, []);
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl p-6">
+        <section className="bg-gray-50 dark:bg-gray-950 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                     <span>👻</span> Ghost Data: Attribution Gap Analysis
                 </h3>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-[#00FF9F]/10 border border-[#00FF9F]/30 rounded-lg">
-                    <span className="text-xs text-slate-400">Blind Spot Profit:</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Blind Spot Profit:</span>
                     <span className="text-sm font-bold text-[#00FF9F] font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         +${blindSpotProfit.toLocaleString()}
                     </span>
@@ -165,9 +165,9 @@ export default function GhostDataChart() {
             <div ref={chartRef} style={{ height: '280px' }} />
 
             <div className="mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 bg-emerald-500 rounded"></span>
+                        <span className="w-4 h-4 bg-success-500 rounded"></span>
                         <span>Attributed Sales</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export default function GhostDataChart() {
                         <span className="text-[#FFBF00]">Legacy Baseline (Blind Spot)</span>
                     </div>
                 </div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-gray-400 dark:text-gray-500">
                     Gap = Profit AI captured that Legacy reporting missed
                 </div>
             </div>

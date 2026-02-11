@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { API_BASE } from '@/utils/api';
+import { Globe, AlertTriangle } from 'lucide-react';
 
 // ==================== Profile Context ====================
-// Provides global state for the selected profile across all components
 
 interface Profile {
   profile_id: string;
@@ -32,7 +32,7 @@ interface ProfileContextType {
   switchProfile: (profileId: string) => Promise<void>;
   toggleShadow: () => Promise<void>;
   refreshData: () => void;
-  dataVersion: number; // Increments when data should refresh
+  dataVersion: number;
 }
 
 const ProfileContext = createContext<ProfileContextType | null>(null);
@@ -45,7 +45,6 @@ export function useProfile() {
   return context;
 }
 
-// Country flag emojis
 const countryFlags: Record<string, string> = {
   DE: '🇩🇪', UK: '🇬🇧', FR: '🇫🇷', IT: '🇮🇹', ES: '🇪🇸',
   NL: '🇳🇱', SE: '🇸🇪', PL: '🇵🇱', BE: '🇧🇪', IE: '🇮🇪',
@@ -84,7 +83,7 @@ export function ProfileProvider({ children, apiUrl = '' }: ProfileProviderProps)
         setError(data.error);
       }
     } catch (e) {
-      setError('Failed to load profiles');
+      // Silently skip if backend is unreachable
     } finally {
       setLoading(false);
     }
@@ -128,7 +127,6 @@ export function ProfileProvider({ children, apiUrl = '' }: ProfileProviderProps)
 
       if (data.success) {
         setCurrentProfileId(profileId);
-        // Trigger data refresh in all consuming components
         setDataVersion(v => v + 1);
       } else {
         setError(data.detail || 'Failed to switch profile');
@@ -158,7 +156,6 @@ export function ProfileProvider({ children, apiUrl = '' }: ProfileProviderProps)
           });
         }
       }
-      // Refresh data after toggle
       setDataVersion(v => v + 1);
     } catch (e) {
       setError('Failed to toggle shadow mode');
@@ -203,18 +200,21 @@ export default function ControlPanel() {
   } = useProfile();
 
   return (
-    <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-4 mb-6">
+    <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02] p-4 mb-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
 
         {/* Country Selector */}
         <div className="flex items-center gap-3">
-          <span className="text-slate-400 text-sm font-medium">🌍 Country:</span>
+          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm font-medium">
+            <Globe className="h-4 w-4" />
+            <span>Country:</span>
+          </div>
           <div className="relative">
             <select
               value={currentProfileId}
               onChange={(e) => switchProfile(e.target.value)}
               disabled={loading || switching || profiles.length === 0}
-              className="appearance-none bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 pr-8 text-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-w-[180px]"
+              className="appearance-none h-10 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 pr-8 text-gray-900 dark:text-white text-sm font-medium focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 focus:border-brand-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-w-[180px]"
             >
               {loading ? (
                 <option>Loading...</option>
@@ -228,12 +228,16 @@ export default function ControlPanel() {
                 ))
               )}
             </select>
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-              {switching ? '⏳' : '▼'}
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-500">
+              {switching ? (
+                <div className="animate-spin h-3.5 w-3.5 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+              ) : (
+                <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" /></svg>
+              )}
             </div>
           </div>
           {currentProfile && (
-            <span className="text-xs text-slate-500">
+            <span className="text-theme-xs text-gray-400 dark:text-gray-500 font-medium">
               {currentProfile.currency_code}
             </span>
           )}
@@ -241,24 +245,24 @@ export default function ControlPanel() {
 
         {/* Shadow Mode Toggle */}
         <div className="flex items-center gap-3">
-          <span className="text-slate-400 text-sm font-medium">Shadow Mode:</span>
+          <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">Shadow Mode:</span>
           <button
             onClick={toggleShadow}
-            className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 ${shadowStatus.active
-              ? 'bg-gradient-to-r from-green-600 to-green-500'
-              : 'bg-slate-700'
+            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 ${shadowStatus.active
+              ? 'bg-success-500'
+              : 'bg-gray-700'
               }`}
           >
             <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform ${shadowStatus.active ? 'translate-x-9' : 'translate-x-1'
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-theme-xs transition-transform ${shadowStatus.active ? 'translate-x-8' : 'translate-x-1'
                 }`}
             />
           </button>
-          <span className={`text-sm font-medium ${shadowStatus.active ? 'text-green-400' : 'text-slate-500'}`}>
-            {shadowStatus.active ? '● ON' : '○ OFF'}
+          <span className={`text-sm font-medium ${shadowStatus.active ? 'text-success-400' : 'text-gray-400 dark:text-gray-500'}`}>
+            {shadowStatus.active ? 'ON' : 'OFF'}
           </span>
           {shadowStatus.active && shadowStatus.days_elapsed !== undefined && (
-            <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded">
+            <span className="text-theme-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md border border-gray-300 dark:border-gray-700">
               Day {shadowStatus.days_elapsed}/14
             </span>
           )}
@@ -267,15 +271,17 @@ export default function ControlPanel() {
         {/* Status Indicator */}
         <div className="flex items-center gap-2">
           {error ? (
-            <span className="text-red-400 text-sm">⚠️ {error}</span>
+            <span className="text-error-400 text-sm flex items-center gap-1.5">
+              <AlertTriangle className="h-3.5 w-3.5" /> {error}
+            </span>
           ) : switching ? (
-            <span className="text-yellow-400 text-sm flex items-center gap-1">
-              <span className="animate-spin">⏳</span>
+            <span className="text-warning-400 text-sm flex items-center gap-1.5">
+              <div className="animate-spin h-3.5 w-3.5 border-2 border-warning-400 border-t-transparent rounded-full"></div>
               Switching...
             </span>
           ) : (
-            <span className="text-green-400 text-sm flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-success-400 text-sm flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-success-400 rounded-full animate-pulse" />
               Connected
             </span>
           )}

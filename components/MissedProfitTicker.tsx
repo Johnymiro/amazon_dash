@@ -25,7 +25,6 @@ function AnimatedCounter({ value, prefix = '', suffix = '', duration = 1000, cla
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Easing function for smooth animation
             const easeOutQuart = 1 - Math.pow(1 - progress, 4);
             const currentValue = startValue + (endValue - startValue) * easeOutQuart;
 
@@ -56,7 +55,7 @@ export default function MissedProfitTicker() {
     }>({
         profitAlpha: 1569.03,
         alphaPct: 120.5,
-        lastUpdate: null  // Defer to useEffect to avoid SSR mismatch
+        lastUpdate: null
     });
     const [isGlowing, setIsGlowing] = useState(false);
 
@@ -70,7 +69,6 @@ export default function MissedProfitTicker() {
                         const newAlpha = data.summary.profit_alpha;
                         const newPct = data.summary.alpha_pct;
 
-                        // Trigger glow effect if value changed
                         if (newAlpha !== alphaData.profitAlpha) {
                             setIsGlowing(true);
                             setTimeout(() => setIsGlowing(false), 1500);
@@ -84,8 +82,6 @@ export default function MissedProfitTicker() {
                     }
                 }
             } catch {
-                // API not available, use simulated data
-                // Simulate small incremental updates
                 setAlphaData(prev => ({
                     ...prev,
                     profitAlpha: prev.profitAlpha + (Math.random() * 10 - 3),
@@ -97,10 +93,8 @@ export default function MissedProfitTicker() {
             }
         };
 
-        // Initial fetch
         fetchAlphaReport();
 
-        // Refresh every 10 seconds
         const interval = setInterval(fetchAlphaReport, 10000);
         return () => clearInterval(interval);
     }, []);
@@ -119,50 +113,47 @@ export default function MissedProfitTicker() {
             className={`
                 relative overflow-hidden rounded-xl border
                 ${isGlowing
-                    ? 'border-[#00FF9F] bg-[#00FF9F]/10 shadow-[0_0_30px_rgba(0,255,159,0.3)]'
-                    : 'border-[#00FF9F]/30 bg-[#00FF9F]/5'
+                    ? 'border-success-400 bg-success-500/10 shadow-[0_0_30px_rgba(18,183,106,0.2)]'
+                    : 'border-success-500/20 bg-success-500/5'
                 }
                 transition-all duration-500
             `}
         >
             {/* Animated background pulse */}
             {isGlowing && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00FF9F]/20 to-transparent animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-success-500/10 to-transparent animate-pulse" />
             )}
 
             <div className="relative px-6 py-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-4">
                     <div>
-                        <div className="flex items-center gap-2 text-xs text-[#00FF9F]/80 mb-1">
-                            <span className="w-2 h-2 bg-[#00FF9F] rounded-full animate-pulse"></span>
-                            <span className="font-inter uppercase tracking-wider">Projected Incremental Profit (Alpha)</span>
+                        <div className="flex items-center gap-2 text-theme-xs text-success-400/80 mb-1">
+                            <span className="w-2 h-2 bg-success-400 rounded-full animate-pulse"></span>
+                            <span className="uppercase tracking-wider font-medium">Projected Incremental Profit (Alpha)</span>
                         </div>
                         <div className="flex items-baseline gap-3">
                             <AnimatedCounter
                                 value={alphaData.profitAlpha}
                                 prefix="+$"
-                                className="text-4xl font-bold text-[#00FF9F]"
+                                className="text-3xl sm:text-4xl font-bold text-success-400"
                                 duration={800}
                             />
                             <AnimatedCounter
                                 value={alphaData.alphaPct}
                                 prefix="↑ "
                                 suffix="%"
-                                className="text-xl text-[#00FF9F]/80"
+                                className="text-lg sm:text-xl text-success-400/80"
                                 duration={800}
                             />
                         </div>
                     </div>
 
                     <div className="text-right">
-                        <div className="text-xs text-slate-500 mb-1">Formula</div>
-                        <div
-                            className="text-xs text-slate-400 font-mono px-2 py-1 bg-[#1a1a1a] rounded"
-                            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                        >
-                            α = (Shadow TNP - Live TNP)
+                        <div className="text-theme-xs text-gray-400 dark:text-gray-500 mb-1">Formula</div>
+                        <div className="text-theme-xs text-gray-500 dark:text-gray-400 font-mono px-2 py-1 rounded-md bg-gray-50 dark:bg-white/[0.03] border border-gray-200 dark:border-gray-800">
+                            &alpha; = (Shadow TNP - Live TNP)
                         </div>
-                        <div className="text-[10px] text-slate-500 mt-2">
+                        <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-2">
                             Last: {formatTime(alphaData.lastUpdate)}
                         </div>
                     </div>

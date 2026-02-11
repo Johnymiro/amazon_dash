@@ -97,8 +97,8 @@ const insightIcons: Record<string, string> = {
 const insightColors: Record<string, { border: string; bg: string; text: string }> = {
     critical: {
         border: 'border-red-500/50',
-        bg: 'bg-red-500/10',
-        text: 'text-red-400'
+        bg: 'bg-error-500/5',
+        text: 'text-error-400'
     },
     warning: {
         border: 'border-[#FFBF00]/50',
@@ -168,35 +168,35 @@ export default function StrategistInsights() {
     const pendingCount = insights.filter((_, i) => !approvedActions.has(i)).length;
 
     return (
-        <section className="bg-[#121212] backdrop-blur border border-slate-800 rounded-2xl p-6 lg:col-span-2">
+        <section className="bg-gray-50 dark:bg-gray-950 backdrop-blur border border-gray-200 dark:border-gray-800 rounded-2xl p-6 lg:col-span-2">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2 font-inter">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                     <span>💡</span> Tactical Insights Engine
                 </h3>
                 <div className="flex items-center gap-3 text-xs">
-                    <div className="px-2 py-1 bg-red-500/10 border border-red-500/30 rounded-lg">
-                        <span className="text-slate-400">Waste Found: </span>
-                        <span className="text-red-400 font-bold font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                    <div className="px-2 py-1 bg-error-500/5 border border-error-500/20 rounded-lg">
+                        <span className="text-gray-500 dark:text-gray-400">Waste Found: </span>
+                        <span className="text-error-400 font-bold font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             -${totalWaste.toLocaleString()}
                         </span>
                     </div>
                     <div className="px-2 py-1 bg-[#00FF9F]/10 border border-[#00FF9F]/30 rounded-lg">
-                        <span className="text-slate-400">Opportunity: </span>
+                        <span className="text-gray-500 dark:text-gray-400">Opportunity: </span>
                         <span className="text-[#00FF9F] font-bold font-mono" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                             +${totalOpportunity.toLocaleString()}
                         </span>
                     </div>
                     {approvedCount > 0 && (
-                        <div className="px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                            <span className="text-purple-400">✓ {approvedCount} Approved</span>
+                        <div className="px-2 py-1 bg-brand-500/10 border border-brand-500/20 rounded-lg">
+                            <span className="text-brand-400">✓ {approvedCount} Approved</span>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-2 mb-4 p-1 bg-[#1a1a1a] rounded-lg w-fit">
+            <div className="flex items-center gap-2 mb-4 p-1 bg-white dark:bg-gray-900 rounded-lg w-fit">
                 {[
                     { key: 'all', label: 'All', count: insights.length },
                     { key: 'leaky_bucket', label: '🪣 Leaky Buckets', count: insights.filter(i => i.type === 'leaky_bucket').length },
@@ -207,8 +207,8 @@ export default function StrategistInsights() {
                         key={tab.key}
                         onClick={() => setFilter(tab.key as FilterType)}
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${filter === tab.key
-                            ? 'bg-purple-600 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                            ? 'bg-brand-600 text-white'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/[0.03]'
                             }`}
                     >
                         {tab.label} <span className="opacity-60">({tab.count})</span>
@@ -229,7 +229,7 @@ export default function StrategistInsights() {
                             key={idx}
                             className={`p-4 rounded-xl border transition-all hover:scale-[1.01] cursor-pointer
                                 ${isApproved
-                                    ? 'border-purple-500/50 bg-purple-500/10'
+                                    ? 'border-purple-500/50 bg-brand-500/10'
                                     : `${colors.border} ${colors.bg}`
                                 }
                             `}
@@ -239,18 +239,18 @@ export default function StrategistInsights() {
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <span className="text-xl">{insightIcons[insight.type]}</span>
-                                    <span className={`font-bold ${isApproved ? 'text-purple-400' : colors.text}`}>
+                                    <span className={`font-bold ${isApproved ? 'text-brand-400' : colors.text}`}>
                                         {insight.title}
                                     </span>
                                     {isApproved && (
-                                        <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs">
+                                        <span className="px-2 py-0.5 bg-brand-500/10 text-brand-400 rounded text-xs">
                                             ✓ Pre-Authorized
                                         </span>
                                     )}
                                 </div>
                                 {insight.delta !== 0 && (
                                     <span
-                                        className={`font-bold font-mono ${insight.delta > 0 ? 'text-[#00FF9F]' : 'text-red-400'}`}
+                                        className={`font-bold font-mono ${insight.delta > 0 ? 'text-[#00FF9F]' : 'text-error-400'}`}
                                         style={{ fontFamily: 'JetBrains Mono, monospace' }}
                                     >
                                         {insight.delta > 0 ? '+' : ''}{insight.delta < 0 ? '-' : ''}${Math.abs(insight.delta).toLocaleString()}
@@ -259,23 +259,23 @@ export default function StrategistInsights() {
                             </div>
 
                             {/* Keyword */}
-                            <div className="font-mono text-white text-sm mb-2" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                            <div className="font-mono text-gray-900 dark:text-white text-sm mb-2" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                                 "{insight.keyword}"
                             </div>
 
                             {/* Metrics */}
-                            <div className="text-xs text-slate-400 space-y-1">
+                            <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
                                 <div>{insight.metrics.primary}</div>
                                 <div>{insight.metrics.secondary}</div>
                             </div>
 
                             {/* Expanded Action + Approve Button */}
                             {isExpanded && (
-                                <div className="mt-3 pt-3 border-t border-slate-700/50">
+                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-xs">
-                                            <span className="text-purple-400">🤖 AI Action:</span>
-                                            <span className="text-slate-300">{insight.action}</span>
+                                            <span className="text-brand-400">🤖 AI Action:</span>
+                                            <span className="text-gray-700 dark:text-gray-300">{insight.action}</span>
                                         </div>
                                     </div>
 
@@ -285,19 +285,19 @@ export default function StrategistInsights() {
                                             {!isApproved ? (
                                                 <button
                                                     onClick={(e) => handleApprove(idx, e)}
-                                                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-2"
+                                                    className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-2"
                                                 >
                                                     ✓ Approve Logic for Go-Live
                                                 </button>
                                             ) : (
                                                 <button
                                                     onClick={(e) => handleRevoke(idx, e)}
-                                                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-medium transition-all flex items-center gap-2"
+                                                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-all flex items-center gap-2"
                                                 >
                                                     ✕ Revoke Approval
                                                 </button>
                                             )}
-                                            <span className="text-xs text-slate-500">
+                                            <span className="text-xs text-gray-400 dark:text-gray-500">
                                                 {isApproved
                                                     ? 'This action will execute automatically at Go-Live'
                                                     : 'Pre-authorize this AI decision for the Go-Live transition'
@@ -313,11 +313,11 @@ export default function StrategistInsights() {
             </div>
 
             {/* Footer */}
-            <div className="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500">
                 <div className="flex items-center gap-4">
                     <span>Click any insight to expand AI action</span>
                     {approvedCount > 0 && (
-                        <span className="text-purple-400">
+                        <span className="text-brand-400">
                             {approvedCount} of {insights.length} actions pre-authorized for Go-Live
                         </span>
                     )}
