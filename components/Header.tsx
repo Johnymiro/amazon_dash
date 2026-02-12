@@ -6,7 +6,8 @@ import type { ShadowStatus } from '@/utils/types';
 import VerifiedSourceBadge from './VerifiedSourceBadge';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/utils/axios';
-import { Zap, LogOut, Play, Square, Crown, Activity, Cpu } from 'lucide-react';
+import { Zap, LogOut, Play, Square, Crown, Activity, Cpu, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface AlphaReport {
     profit_alpha: number;
@@ -17,6 +18,7 @@ interface AlphaReport {
 
 export default function Header() {
     const { user, logout, isAuthenticated } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [status, setStatus] = useState<ShadowStatus | null>(null);
     const [loading, setLoading] = useState(false);
     const [sovereigntyLoading, setSovereigntyLoading] = useState(false);
@@ -172,6 +174,15 @@ export default function Header() {
                                 )}
                             </button>
                         )}
+
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className="flex items-center justify-center h-10 w-10 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/[0.05] transition-all"
+                            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                        >
+                            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                        </button>
 
                         {/* User Info / Logout */}
                         {isAuthenticated && user && (
