@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Header from '@/components/Header';
-import IntegrityBanner from '@/components/IntegrityBanner';
 import ProfitAlphaScorecard from '@/components/ProfitAlphaScorecard';
 import ComparisonMatrix from '@/components/ComparisonMatrix';
 import GhostDataChart from '@/components/GhostDataChart';
@@ -49,11 +48,10 @@ export default function Home() {
       <ProfileProvider apiUrl={API_BASE}>
         <DashboardGatekeeper>
           <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-            <IntegrityBanner />
             <Header />
 
             {/* Tab Navigation */}
-            <div className="max-w-[1800px] mx-auto px-4 md:px-6 pt-6">
+            <div className="max-w-[1800px] mx-auto px-4 md:px-6 pt-4">
               <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 w-fit overflow-x-auto no-scrollbar shadow-theme-xs dark:shadow-none">
                 {tabs.map((tab) => (
                   <button
@@ -72,7 +70,7 @@ export default function Home() {
               </div>
             </div>
 
-            <main className="max-w-[1800px] mx-auto p-4 md:p-6 space-y-6">
+            <main className="max-w-[1800px] mx-auto p-4 md:p-6 space-y-4">
               {activeTab === 'dashboard' && (
                 <>
                   <ControlPanel />

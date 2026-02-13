@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/utils/axios';
 import { Zap, LogOut, Play, Square, Crown, Activity, Cpu, Sun, Moon } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import IntegrityBanner from './IntegrityBanner';
 
 interface AlphaReport {
     profit_alpha: number;
@@ -130,6 +131,9 @@ export default function Header() {
 
                         {/* System Health */}
                         <div className="hidden lg:flex items-center gap-2">
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02]">
+                                <IntegrityBanner />
+                            </div>
                             <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02]">
                                 <Activity className="h-3.5 w-3.5 text-success-400 animate-pulse" />
                                 <span className="text-theme-xs text-gray-500 dark:text-gray-400">Sentinel: <span className="text-success-400 font-medium">{sentinelLatency}ms</span></span>

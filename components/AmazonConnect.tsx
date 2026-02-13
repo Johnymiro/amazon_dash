@@ -179,7 +179,7 @@ export default function AmazonConnect({ apiUrl = '' }: AmazonConnectProps) {
     return (
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.02] p-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-theme-xs">
                         <svg viewBox="0 0 24 24" className="w-6 h-6 text-black" fill="currentColor">
@@ -194,51 +194,55 @@ export default function AmazonConnect({ apiUrl = '' }: AmazonConnectProps) {
                     </div>
                 </div>
 
-                <div className={`px-3 py-1 rounded-full text-theme-xs font-medium ${status?.connected
-                    ? 'bg-success-500/10 text-success-400 border border-success-500/20'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-700'
-                    }`}>
-                    {status?.connected ? 'Live' : 'Offline'}
+                <div className="flex items-center gap-2">
+                    {status?.connected && (
+                        <>
+                            <button
+                                onClick={handleTestConnection}
+                                className="flex items-center gap-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.03] hover:bg-gray-100 dark:hover:bg-white/[0.05] text-gray-700 dark:text-gray-300 py-1.5 px-3 text-theme-xs font-medium transition-colors"
+                            >
+                                <TestTube className="h-3.5 w-3.5" /> Test
+                            </button>
+                            <button
+                                onClick={handleDisconnect}
+                                className="flex items-center gap-1.5 rounded-lg border border-error-500/20 bg-error-500/5 hover:bg-error-500/10 text-error-400 py-1.5 px-3 text-theme-xs font-medium transition-colors"
+                            >
+                                <Unlink className="h-3.5 w-3.5" /> Disconnect
+                            </button>
+                        </>
+                    )}
+                    <div className={`px-3 py-1 rounded-full text-theme-xs font-medium ${status?.connected
+                        ? 'bg-success-500/10 text-success-400 border border-success-500/20'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-700'
+                        }`}>
+                        {status?.connected ? 'Live' : 'Offline'}
+                    </div>
                 </div>
             </div>
 
-            {/* Connected State */}
+            {/* Connected State — compact inline row */}
             {status?.connected && (
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-white/[0.03] p-4">
-                            <p className="text-gray-400 dark:text-gray-500 text-theme-xs mb-1">Account</p>
-                            <p className="text-gray-900 dark:text-white font-mono text-sm">{status.account_name || 'Seller Account'}</p>
-                        </div>
-                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-white/[0.03] p-4">
-                            <p className="text-gray-400 dark:text-gray-500 text-theme-xs mb-1">Marketplace</p>
-                            <p className="text-gray-900 dark:text-white font-mono text-sm">{status.marketplace || 'US'}</p>
-                        </div>
-                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-white/[0.03] p-4">
-                            <p className="text-gray-400 dark:text-gray-500 text-theme-xs mb-1">Profile ID</p>
-                            <p className="text-gray-900 dark:text-white font-mono text-sm truncate">{status.profile_id || '\u2014'}</p>
-                        </div>
-                        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-white/[0.03] p-4">
-                            <p className="text-gray-400 dark:text-gray-500 text-theme-xs mb-1">Last Sync</p>
-                            <p className="text-gray-900 dark:text-white font-mono text-sm">
-                                {status.last_sync ? new Date(status.last_sync).toLocaleString() : 'Never'}
-                            </p>
-                        </div>
+                <div className="mt-4 flex items-center gap-3 text-sm flex-wrap">
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400 dark:text-gray-500 text-theme-xs">Account</span>
+                        <span className="text-gray-900 dark:text-white font-mono text-theme-xs">{status.account_name || 'Seller Account'}</span>
                     </div>
-
-                    <div className="flex gap-3">
-                        <button
-                            onClick={handleTestConnection}
-                            className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.03] hover:bg-gray-100 dark:hover:bg-white/[0.05] text-gray-900 dark:text-white py-2.5 px-4 text-sm font-medium transition-colors"
-                        >
-                            <TestTube className="h-4 w-4" /> Test Connection
-                        </button>
-                        <button
-                            onClick={handleDisconnect}
-                            className="flex items-center gap-2 rounded-xl border border-error-500/20 bg-error-500/5 hover:bg-error-500/10 text-error-400 py-2.5 px-4 text-sm font-medium transition-colors"
-                        >
-                            <Unlink className="h-4 w-4" /> Disconnect
-                        </button>
+                    <span className="text-gray-300 dark:text-gray-700">|</span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400 dark:text-gray-500 text-theme-xs">Marketplace</span>
+                        <span className="text-gray-900 dark:text-white font-mono text-theme-xs">{status.marketplace || 'US'}</span>
+                    </div>
+                    <span className="text-gray-300 dark:text-gray-700">|</span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400 dark:text-gray-500 text-theme-xs">Profile</span>
+                        <span className="text-gray-900 dark:text-white font-mono text-theme-xs truncate max-w-[120px]">{status.profile_id || '\u2014'}</span>
+                    </div>
+                    <span className="text-gray-300 dark:text-gray-700">|</span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400 dark:text-gray-500 text-theme-xs">Last Sync</span>
+                        <span className="text-gray-900 dark:text-white font-mono text-theme-xs">
+                            {status.last_sync ? new Date(status.last_sync).toLocaleString() : 'Never'}
+                        </span>
                     </div>
                 </div>
             )}
